@@ -1,0 +1,54 @@
+{
+  "name": "bip85",
+  "version": "0.0.1",
+  "description": "TypeScript/JavaScript implementation of Bitcoin BIP85: Deterministic Entropy From BIP32 Keychains",
+  "main": "src/index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json",
+    "coverage-report": "npm run build && npm run nobuild:coverage-report",
+    "coverage": "npm run build && npm run nobuild:coverage",
+    "format": "npm run prettier -- --write",
+    "format:ci": "npm run prettier -- --check",
+    "gitdiff:ci": "npm run build && git diff --exit-code",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "nobuild:coverage-report": "nyc report --reporter=lcov",
+    "nobuild:coverage": "nyc --check-coverage --branches 100 --functions 100 npm run nobuild:unit",
+    "nobuild:unit": "tape test/**/*.spec.js",
+    "prettier": "prettier 'ts_src/**/*.ts' 'test/**/*.js' --ignore-path ./.prettierignore",
+    "test": "npm run build && npm run format:ci && npm run lint && npm run nobuild:coverage",
+    "unit": "npm run build && npm run nobuild:unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreasGassmann/bip85.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoinjs",
+    "bip85",
+    "mnemonic",
+    "entropy"
+  ],
+  "author": "Andreas Gassmann",
+  "license": "MIT",
+  "files": [
+    "src",
+    "types"
+  ],
+  "bugs": {
+    "url": "https://github.com/AndreasGassmann/bip85/issues"
+  },
+  "homepage": "https://github.com/AndreasGassmann/bip85#readme",
+  "dependencies": {
+    "bip32": "^2.0.6",
+    "create-hmac": "^1.1.7"
+  },
+  "devDependencies": {
+    "@types/create-hmac": "^1.1.0",
+    "@types/node": "^14.14.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.2",
+    "tape": "^5.0.1"
+  }
+}
