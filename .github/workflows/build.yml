@@ -30,6 +30,9 @@ jobs:
         run: npm run build
 
       - name: Test
+        run: npm run test
+
+      - name: Coverage
         run: npm run coverage-report
 
       - name: Analyze with SonarCloud
