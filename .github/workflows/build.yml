@@ -32,7 +32,7 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Test
+      - name: Coverage
         run: npm run coverage-report
 
       - name: Analyze with SonarCloud
