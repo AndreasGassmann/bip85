@@ -21,7 +21,7 @@ enum BIP85_APPLICATIONS {
  */
 type BIP85_WORD_LENGTHS = 12 | 18 | 24;
 
-type BIP39_LANGUAGES = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type BIP39_LANGUAGES = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 /**
  * Derive BIP-39 child entropy from a BIP-32 root key
