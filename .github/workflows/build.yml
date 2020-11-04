@@ -29,6 +29,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Git diff
+        run: npm run gitdiff:ci
+
       - name: Test
         run: npm run test
 
