@@ -1,4 +1,4 @@
-const BIP85 = require('..').BIP85;
+const BIP85 = require('../..').BIP85;
 const tape = require('tape');
 
 // Mnemonic: civil purpose bubble rubber carry crazy deposit text switch unhappy blush wrist

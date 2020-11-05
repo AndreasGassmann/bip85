@@ -13,9 +13,9 @@
     "gitdiff:ci": "npm run build && git diff --exit-code",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "nobuild:coverage-report": "nyc report --reporter=lcov",
-    "nobuild:coverage": "nyc --check-coverage --branches 100 --functions 100 npm run nobuild:unit",
+    "nobuild:coverage": "nyc --check-coverage --lines 80 --branches 80 --functions 80 npm run nobuild:unit",
     "nobuild:unit": "tape test/**/*.spec.js",
-    "prettier": "prettier 'ts_src/**/*.ts' 'test/**/*.js' --ignore-path ./.prettierignore",
+    "prettier": "prettier 'ts_src/**/*.ts' 'examples/**/*.ts' 'test/**/*.js' --ignore-path ./.prettierignore",
     "test": "npm run build && npm run format:ci && npm run lint && npm run nobuild:coverage",
     "unit": "npm run build && npm run nobuild:unit"
   },
@@ -42,11 +42,14 @@
   "homepage": "https://github.com/AndreasGassmann/bip85#readme",
   "dependencies": {
     "bip32": "^2.0.6",
-    "create-hmac": "^1.1.7"
+    "bip39": "^3.0.2",
+    "create-hmac": "^1.1.7",
+    "wif": "^2.0.6"
   },
   "devDependencies": {
     "@types/create-hmac": "^1.1.0",
     "@types/node": "^14.14.0",
+    "@types/wif": "^2.0.2",
     "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "tape": "^5.0.1",
