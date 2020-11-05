@@ -6,6 +6,28 @@ const tape = require('tape');
 const rootKey =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
 
+tape('works for test case 1', (t) => {
+  const master = BIP85.fromBase58(rootKey);
+  const child = master.derive(`m/83696968'/0'/0'`);
+
+  t.plan(1);
+  t.equal(
+    child,
+    'efecfbccffea313214232d29e71563d941229afb4338c21f9517c41aaa0d16f00b83d2a09ef747e7a64e8e2bd5a14869e693da66ce94ac2da570ab7ee48618f7',
+  );
+});
+
+tape('works for test case 2', (t) => {
+  const master = BIP85.fromBase58(rootKey);
+  const child = master.derive(`m/83696968'/0'/1'`);
+
+  t.plan(1);
+  t.equal(
+    child,
+    '70c6e3e8ebee8dc4c0dbba66076819bb8c09672527c4277ca8729532ad711872218f826919f6b67218adde99018a6df9095ab2b58d803b5b93ec9802085a690e',
+  );
+});
+
 tape('works for BIP39, 12 words', (t) => {
   const master = BIP85.fromBase58(rootKey);
   const child = master.deriveBIP39(0, 12, 0);
