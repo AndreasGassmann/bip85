@@ -1,6 +1,6 @@
 # BIP85
 
-![GitHub Action](https://github.com/AndreasGassmann/bip85/workflows/Build%2C+Test+and+Analyze/badge.svg)
+![GitHub Action](https://github.com/AndreasGassmann/bip85/workflows/Build%2C%20Test%20and%20Analyze/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=alert_status)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=coverage)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
