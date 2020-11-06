@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BIP85 = void 0;
+exports.BIP85 = exports.BIP85_APPLICATIONS = void 0;
 const bip32_1 = require("bip32");
 const crypto_1 = require("./crypto");
 const util_1 = require("./util");
@@ -15,10 +15,10 @@ const BIP85_DERIVATION_PATH = 83696968;
 var BIP85_APPLICATIONS;
 (function (BIP85_APPLICATIONS) {
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["BIP39"] = 39] = "BIP39";
-    BIP85_APPLICATIONS[BIP85_APPLICATIONS["HD_SEED_WIF"] = 2] = "HD_SEED_WIF";
+    BIP85_APPLICATIONS[BIP85_APPLICATIONS["WIF"] = 2] = "WIF";
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["XPRV"] = 32] = "XPRV";
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["HEX"] = 128169] = "HEX";
-})(BIP85_APPLICATIONS || (BIP85_APPLICATIONS = {}));
+})(BIP85_APPLICATIONS = exports.BIP85_APPLICATIONS || (exports.BIP85_APPLICATIONS = {}));
 /**
  * Derive BIP-39 child entropy from a BIP-32 root key
  */
@@ -49,23 +49,21 @@ class BIP85 {
             }
         })();
         const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.BIP39}'/${language}'/${words}'/${index}'`, entropyLength);
-        return new BIP85Child_1.BIP85Child(entropy);
+        return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.BIP39);
     }
     deriveWIF(index = 0) {
         if (!util_1.isValidIndex(index)) {
             throw new Error('WIF invalid index');
         }
-        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HD_SEED_WIF}'/${index}'`, 32);
-        return new BIP85Child_1.BIP85Child(entropy);
+        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.WIF}'/${index}'`, 32);
+        return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.WIF);
     }
     deriveXPRV(index = 0) {
         if (!util_1.isValidIndex(index)) {
             throw new Error('XPRV invalid index');
         }
         const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.XPRV}'/${index}'`, 64);
-        const chainCode = entropy.slice(0, 64);
-        const privateKey = entropy.slice(64, 128);
-        return new BIP85Child_1.BIP85Child(privateKey, chainCode);
+        return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.XPRV);
     }
     deriveHex(numBytes, index = 0) {
         if (!util_1.isValidIndex(index)) {
@@ -78,9 +76,9 @@ class BIP85 {
             throw new Error('HEX invalid byte length');
         }
         const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HEX}'/${numBytes}'/${index}'`, numBytes);
-        return new BIP85Child_1.BIP85Child(entropy);
+        return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.HEX);
     }
-    derive(path, bytesLength) {
+    derive(path, bytesLength = 64) {
         const childNode = this.node.derivePath(path);
         const childPrivateKey = childNode.privateKey; // Child derived from root key always has private key
         const hash = crypto_1.hmacSHA512(Buffer.from(BIP85_KEY), childPrivateKey);

@@ -1,6 +1,12 @@
 /// <reference types="node" />
 import { BIP32Interface } from 'bip32';
 import { BIP85Child } from './BIP85Child';
+export declare enum BIP85_APPLICATIONS {
+    BIP39 = 39,
+    WIF = 2,
+    XPRV = 32,
+    HEX = 128169
+}
 /**
  * BIP-85 helper types
  */
@@ -16,7 +22,7 @@ export declare class BIP85 {
     deriveWIF(index?: number): BIP85Child;
     deriveXPRV(index?: number): BIP85Child;
     deriveHex(numBytes: number, index?: number): BIP85Child;
-    derive(path: string, bytesLength: number): string;
+    derive(path: string, bytesLength?: number): string;
     static fromBase58(bip32seed: string): BIP85;
     static fromSeed(bip32seed: Buffer): BIP85;
     static fromEntropy(entropy: string, password?: string): BIP85;
