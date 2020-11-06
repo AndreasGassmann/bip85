@@ -11,9 +11,9 @@ import { BIP85Child } from './BIP85Child';
  */
 const BIP85_KEY: string = 'bip-entropy-from-k';
 const BIP85_DERIVATION_PATH: number = 83696968;
-enum BIP85_APPLICATIONS {
+export enum BIP85_APPLICATIONS {
   BIP39 = 39,
-  HD_SEED_WIF = 2,
+  WIF = 2,
   XPRV = 32,
   HEX = 128169,
 }
@@ -71,7 +71,7 @@ export class BIP85 {
       entropyLength,
     );
 
-    return new BIP85Child(entropy);
+    return new BIP85Child(entropy, BIP85_APPLICATIONS.BIP39);
   }
 
   deriveWIF(index: number = 0): BIP85Child {
@@ -80,11 +80,11 @@ export class BIP85 {
     }
 
     const entropy = this.derive(
-      `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HD_SEED_WIF}'/${index}'`,
+      `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.WIF}'/${index}'`,
       32,
     );
 
-    return new BIP85Child(entropy);
+    return new BIP85Child(entropy, BIP85_APPLICATIONS.WIF);
   }
 
   deriveXPRV(index: number = 0): BIP85Child {
@@ -97,10 +97,7 @@ export class BIP85 {
       64,
     );
 
-    const chainCode = entropy.slice(0, 64);
-    const privateKey = entropy.slice(64, 128);
-
-    return new BIP85Child(privateKey, chainCode);
+    return new BIP85Child(entropy, BIP85_APPLICATIONS.XPRV);
   }
 
   deriveHex(numBytes: number, index: number = 0): BIP85Child {
@@ -121,10 +118,10 @@ export class BIP85 {
       numBytes,
     );
 
-    return new BIP85Child(entropy);
+    return new BIP85Child(entropy, BIP85_APPLICATIONS.HEX);
   }
 
-  derive(path: string, bytesLength: number): string {
+  derive(path: string, bytesLength: number = 64): string {
     const childNode: BIP32Interface = this.node.derivePath(path);
     const childPrivateKey: Buffer = childNode.privateKey!; // Child derived from root key always has private key
 
