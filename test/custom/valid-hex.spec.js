@@ -1,4 +1,4 @@
-const BIP85 = require('..').BIP85;
+const BIP85 = require('../..').BIP85;
 const tape = require('tape');
 
 // Root seed taken from: https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki#applications
@@ -44,20 +44,20 @@ testCases.forEach((testCase) => {
   tape(`works for HEX, index: ${testCase.index}`, (t) => {
     const master = BIP85.fromBase58(rootKey);
 
-    const entropy = master.deriveHex(testCase.length, testCase.index);
+    const child = master.deriveHex(testCase.length, testCase.index);
 
     t.plan(1);
-    t.equal(entropy.toString('hex'), testCase.entropy);
+    t.equal(child.toEntropy(), testCase.entropy);
   });
 });
 
 tape(`works for HEX, empty index is 0`, (t) => {
   const master = BIP85.fromBase58(rootKey);
 
-  const entropy = master.deriveHex(16, 0);
-  const entropyNoIndex = master.deriveHex(16);
+  const child = master.deriveHex(16, 0);
+  const childNoIndex = master.deriveHex(16);
 
   t.plan(2);
-  t.equal(entropy.toString('hex'), '3c678a761e24067fecc41c328a3d253d');
-  t.equal(entropyNoIndex.toString('hex'), '3c678a761e24067fecc41c328a3d253d');
+  t.equal(child.toEntropy(), '3c678a761e24067fecc41c328a3d253d');
+  t.equal(childNoIndex.toEntropy(), '3c678a761e24067fecc41c328a3d253d');
 });

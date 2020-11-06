@@ -1,6 +1,8 @@
-import { BIP32Interface, fromBase58 } from 'bip32';
+import { BIP32Interface, fromBase58, fromSeed } from 'bip32';
 import { hmacSHA512 } from './crypto';
 import { isValidIndex as checkValidIndex } from './util';
+import { validateMnemonic, entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
+import { BIP85Child } from './BIP85Child';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki
 
@@ -37,7 +39,7 @@ export class BIP85 {
     language: BIP39_LANGUAGES,
     words: BIP85_WORD_LENGTHS,
     index: number = 0,
-  ): string {
+  ): BIP85Child {
     if (!checkValidIndex(index)) {
       throw new Error('BIP39 invalid index');
     }
@@ -64,35 +66,44 @@ export class BIP85 {
       }
     })();
 
-    return this.derive(
+    const entropy = this.derive(
       `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.BIP39}'/${language}'/${words}'/${index}'`,
       entropyLength,
     );
+
+    return new BIP85Child(entropy);
   }
 
-  deriveHDSeedWIF(index: number = 0): string {
+  deriveWIF(index: number = 0): BIP85Child {
     if (!checkValidIndex(index)) {
       throw new Error('WIF invalid index');
     }
 
-    return this.derive(
+    const entropy = this.derive(
       `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HD_SEED_WIF}'/${index}'`,
       32,
     );
+
+    return new BIP85Child(entropy);
   }
 
-  deriveXPRV(index: number = 0): string {
+  deriveXPRV(index: number = 0): BIP85Child {
     if (!checkValidIndex(index)) {
       throw new Error('XPRV invalid index');
     }
 
-    return this.derive(
+    const entropy = this.derive(
       `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.XPRV}'/${index}'`,
       64,
-    ).slice(64);
+    );
+
+    const chainCode = entropy.slice(0, 64);
+    const privateKey = entropy.slice(64, 128);
+
+    return new BIP85Child(privateKey, chainCode);
   }
 
-  deriveHex(numBytes: number, index: number = 0): string {
+  deriveHex(numBytes: number, index: number = 0): BIP85Child {
     if (!checkValidIndex(index)) {
       throw new Error('HEX invalid index');
     }
@@ -105,10 +116,12 @@ export class BIP85 {
       throw new Error('HEX invalid byte length');
     }
 
-    return this.derive(
+    const entropy = this.derive(
       `m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HEX}'/${numBytes}'/${index}'`,
       numBytes,
     );
+
+    return new BIP85Child(entropy);
   }
 
   derive(path: string, bytesLength: number): string {
@@ -130,5 +143,30 @@ export class BIP85 {
     }
 
     return new BIP85(node);
+  }
+
+  static fromSeed(bip32seed: Buffer): BIP85 {
+    const node: BIP32Interface = fromSeed(bip32seed);
+    if (node.depth !== 0) {
+      throw new Error('Expected master, got child');
+    }
+
+    return new BIP85(node);
+  }
+
+  static fromEntropy(entropy: string, password: string = ''): BIP85 {
+    const mnemonic = entropyToMnemonic(entropy);
+
+    return BIP85.fromMnemonic(mnemonic, password);
+  }
+
+  static fromMnemonic(mnemonic: string, password: string = ''): BIP85 {
+    if (!validateMnemonic(mnemonic)) {
+      throw new Error('Invalid mnemonic');
+    }
+
+    const seed = mnemonicToSeedSync(mnemonic, password);
+
+    return BIP85.fromSeed(seed);
   }
 }

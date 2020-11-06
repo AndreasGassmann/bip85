@@ -4,6 +4,8 @@ exports.BIP85 = void 0;
 const bip32_1 = require("bip32");
 const crypto_1 = require("./crypto");
 const util_1 = require("./util");
+const bip39_1 = require("bip39");
+const BIP85Child_1 = require("./BIP85Child");
 // https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki
 /**
  * Constants defined in BIP-85
@@ -46,19 +48,24 @@ class BIP85 {
                     throw new Error('BIP39 invalid mnemonic length');
             }
         })();
-        return this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.BIP39}'/${language}'/${words}'/${index}'`, entropyLength);
+        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.BIP39}'/${language}'/${words}'/${index}'`, entropyLength);
+        return new BIP85Child_1.BIP85Child(entropy);
     }
-    deriveHDSeedWIF(index = 0) {
+    deriveWIF(index = 0) {
         if (!util_1.isValidIndex(index)) {
             throw new Error('WIF invalid index');
         }
-        return this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HD_SEED_WIF}'/${index}'`, 32);
+        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HD_SEED_WIF}'/${index}'`, 32);
+        return new BIP85Child_1.BIP85Child(entropy);
     }
     deriveXPRV(index = 0) {
         if (!util_1.isValidIndex(index)) {
             throw new Error('XPRV invalid index');
         }
-        return this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.XPRV}'/${index}'`, 64).slice(64);
+        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.XPRV}'/${index}'`, 64);
+        const chainCode = entropy.slice(0, 64);
+        const privateKey = entropy.slice(64, 128);
+        return new BIP85Child_1.BIP85Child(privateKey, chainCode);
     }
     deriveHex(numBytes, index = 0) {
         if (!util_1.isValidIndex(index)) {
@@ -70,7 +77,8 @@ class BIP85 {
         if (numBytes < 16 || numBytes > 64) {
             throw new Error('HEX invalid byte length');
         }
-        return this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HEX}'/${numBytes}'/${index}'`, numBytes);
+        const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.HEX}'/${numBytes}'/${index}'`, numBytes);
+        return new BIP85Child_1.BIP85Child(entropy);
     }
     derive(path, bytesLength) {
         const childNode = this.node.derivePath(path);
@@ -86,6 +94,24 @@ class BIP85 {
             throw new Error('Expected master, got child');
         }
         return new BIP85(node);
+    }
+    static fromSeed(bip32seed) {
+        const node = bip32_1.fromSeed(bip32seed);
+        if (node.depth !== 0) {
+            throw new Error('Expected master, got child');
+        }
+        return new BIP85(node);
+    }
+    static fromEntropy(entropy, password = '') {
+        const mnemonic = bip39_1.entropyToMnemonic(entropy);
+        return BIP85.fromMnemonic(mnemonic, password);
+    }
+    static fromMnemonic(mnemonic, password = '') {
+        if (!bip39_1.validateMnemonic(mnemonic)) {
+            throw new Error('Invalid mnemonic');
+        }
+        const seed = bip39_1.mnemonicToSeedSync(mnemonic, password);
+        return BIP85.fromSeed(seed);
     }
 }
 exports.BIP85 = BIP85;
