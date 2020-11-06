@@ -1,6 +1,6 @@
 {
   "name": "bip85",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TypeScript/JavaScript implementation of Bitcoin BIP85: Deterministic Entropy From BIP32 Keychains",
   "main": "src/index.js",
   "types": "./types/index.d.ts",
