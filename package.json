@@ -41,10 +41,10 @@
   },
   "homepage": "https://github.com/AndreasGassmann/bip85#readme",
   "dependencies": {
-    "bip32": "^2.0.6",
-    "bip39": "^3.0.2",
-    "create-hmac": "^1.1.7",
-    "wif": "^2.0.6"
+    "bip32": "2.0.6",
+    "bip39": "3.0.2",
+    "create-hmac": "1.1.7",
+    "wif": "2.0.6"
   },
   "devDependencies": {
     "@types/create-hmac": "^1.1.0",
