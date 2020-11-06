@@ -180,11 +180,11 @@ All files      |   86.92 |    81.63 |   80.95 |   87.62 |
 ## TODOs
 
 - [ ] Add more tests
-- [ ] Add build/quality badges
 - [ ] Fix sonarsource coverage not working
 - [ ] 100% test coverage
 - [ ] Add more examples
 - [ ] Migrate tests to use typescript
+- [ ] Add changelog
 - [ ] Audit/review of library by 3rd party
 
 ## Dependencies
