@@ -1,4 +1,4 @@
-import { BIP85 } from '../types';
+import { BIP85 } from '../ts_src';
 
 const xprv =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';

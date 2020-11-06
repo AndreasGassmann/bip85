@@ -1,6 +1,6 @@
 import { fromSeed } from 'bip32';
 import { mnemonicToEntropy, mnemonicToSeedSync } from 'bip39';
-import { BIP85 } from '../types';
+import { BIP85 } from '../ts_src';
 
 const mnemonic =
   'install scatter logic circle pencil average fall shoe quantum disease suspect usage'; // Mnemonic
