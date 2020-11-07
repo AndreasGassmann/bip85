@@ -60,7 +60,7 @@ The `BIP85` class provides different methods to derive entropy. The generic `der
 
 The `derive` method accepts 3 parameters.
 
-`path`: A number between 0 and 8, depending on the language
+`path`: The derivation path used to derive entropy  
 `bytes`: Length of the entropy. Default (and maximum): 64
 
 Returns the entropy as a string.
@@ -74,8 +74,8 @@ child; // efecfbccffea313214232d29e71563d941229afb4338c21f9517c41aaa0d16f00b83d2
 
 The `deriveBIP39` method accepts 3 parameters.
 
-`language`: A number between 0 and 8, depending on the language
-`wordLength`: 12, 18 or 24, the length of the mnemonic
+`language`: A number between 0 and 8, depending on the language  
+`wordLength`: 12, 18 or 24, the length of the mnemonic  
 `index`: starting at 0
 
 Returns a `BIP85Child` instance. You can use the methods `toEntropy()` and `toMnemonic()`.
