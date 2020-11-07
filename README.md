@@ -1,11 +1,11 @@
 # BIP85
 
-![GitHub Action](https://github.com/AndreasGassmann/bip85/workflows/Build%2C%20Test%20and%20Analyze/badge.svg)
+[![GitHub Action](https://github.com/AndreasGassmann/bip85/workflows/Build%2C%20Test%20and%20Analyze/badge.svg)](https://github.com/AndreasGassmann/bip85/actions?query=workflow%3A%22Build%2C+Test+and+Analyze%22+branch%3Amain)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=alert_status)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=coverage)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
 
-TypeScript/JavaScript implementation of [Bitcoin BIP85](https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki): Deterministic Entropy From BIP32 Keychains
+TypeScript/JavaScript implementation of [Bitcoin BIP85](https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki): Deterministic Entropy From BIP32 Keychains.
 
 # DISCLAIMER
 
@@ -20,6 +20,32 @@ BIP85 allows you to derive entropy from a BIP32 root key, which can then be used
 ```
 npm install bip85
 ```
+
+## Example
+
+```typescript
+// Derive a BIP39 mnemonic from a BIP32 root key
+
+// BIP32 root key taken from the BIP85 specs
+const xprv =
+  'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
+
+const masterSeed = BIP85.fromBase58(xprv);
+
+const language = 0; // English
+const words = 12; // 12, 18 or 24
+const index = 0; // Should be increased to derive multiple keys
+
+const childSeed = masterSeed.deriveBIP39(language, words, index);
+
+childSeed.toEntropy();
+// 6250b68daf746d12a24d58b4787a714b
+
+childSeed.toMnemonic();
+// girl mad pet galaxy egg matter matrix prison refuse sense ordinary nose
+```
+
+For more examples, check the [examples](/examples/) folder or the [tests](/test/).
 
 ## Documentation
 
@@ -131,32 +157,6 @@ const child = masterSeed.deriveHex(bytes);
 child.toEntropy(); // 492db4698cf3b73a5a24998aa3e9d7fa96275d85724a91e71aa2d645442f878555d078fd1f1f67e368976f04137b1f7a0d19232136ca50c44614af72b5582a5c
 ```
 
-## Example
-
-```typescript
-// Derive a BIP39 mnemonic from a BIP32 root key
-
-// BIP32 root key taken from the BIP85 specs
-const xprv =
-  'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
-
-const masterSeed = BIP85.fromBase58(xprv);
-
-const language = 0; // English
-const words = 12; // 12, 18 or 24
-const index = 0; // Should be increased to derive multiple keys
-
-const childSeed = masterSeed.deriveBIP39(language, words, index);
-
-childSeed.toEntropy();
-// 6250b68daf746d12a24d58b4787a714b
-
-childSeed.toMnemonic();
-// girl mad pet galaxy egg matter matrix prison refuse sense ordinary nose
-```
-
-For more examples, check the [examples](/examples/) folder or the [tests](/test/).
-
 ## Testing
 
 ```bash
@@ -198,7 +198,7 @@ There are only 4 (non-dev) dependencies:
 - [create-hmac](https://www.npmjs.com/package/create-hmac)
 - [wif](https://www.npmjs.com/package/wif)
 
-3 of those repositories are owned by the [bitcoinjs](https://github.com/bitcoinjs) organization, one of them is managed by [crypto-browserify](https://github.com/crypto-browserify)
+3 of those repositories are owned by the [bitcoinjs](https://github.com/bitcoinjs) organization, one of them is managed by [crypto-browserify](https://github.com/crypto-browserify).
 
 ## Credits
 
