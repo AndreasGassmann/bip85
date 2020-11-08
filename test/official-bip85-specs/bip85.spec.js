@@ -3,6 +3,7 @@ const tape = require('tape');
 
 // Test vectors taken from: https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki#applications
 
+// Mnemonic: install scatter logic circle pencil average fall shoe quantum disease suspect usage
 const rootKey =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
 

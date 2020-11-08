@@ -26,6 +26,7 @@ npm install bip85
 ```typescript
 // Derive a BIP39 mnemonic from a BIP32 root key
 
+// Mnemonic: install scatter logic circle pencil average fall shoe quantum disease suspect usage
 // BIP32 root key taken from the BIP85 specs
 const xprv =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';

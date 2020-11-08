@@ -3,6 +3,7 @@ const tape = require('tape');
 
 // Test vectors taken from python library: https://github.com/ethankosakovsky/bipentropybipentropy/blob/master/test_entropy.py
 
+// Mnemonic: install scatter logic circle pencil average fall shoe quantum disease suspect usage
 const rootKey =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
 
