@@ -4,6 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=alert_status)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=AndreasGassmann_bip85&metric=coverage)](https://sonarcloud.io/dashboard?id=AndreasGassmann_bip85)
+[![npm](https://img.shields.io/npm/v/bip85.svg?colorB=brightgreen)](https://www.npmjs.com/package/bip85)
 
 TypeScript/JavaScript implementation of [Bitcoin BIP85](https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki): Deterministic Entropy From BIP32 Keychains.
 
