@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { BIP32Interface } from 'bip32';
 import { BIP85Child } from './BIP85Child';
 export declare enum BIP85_APPLICATIONS {
@@ -10,8 +9,8 @@ export declare enum BIP85_APPLICATIONS {
 /**
  * BIP-85 helper types
  */
-declare type BIP85_WORD_LENGTHS = 12 | 18 | 24;
-declare type BIP39_LANGUAGES = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type BIP85_WORD_LENGTHS = 12 | 18 | 24;
+type BIP39_LANGUAGES = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 /**
  * Derive BIP-39 child entropy from a BIP-32 root key
  */

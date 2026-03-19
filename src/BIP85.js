@@ -6,6 +6,8 @@ const crypto_1 = require("./crypto");
 const util_1 = require("./util");
 const bip39_1 = require("bip39");
 const BIP85Child_1 = require("./BIP85Child");
+const uint8array_tools_1 = require("uint8array-tools");
+const ecc = require("tiny-secp256k1");
 // https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki
 /**
  * Constants defined in BIP-85
@@ -18,7 +20,7 @@ var BIP85_APPLICATIONS;
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["WIF"] = 2] = "WIF";
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["XPRV"] = 32] = "XPRV";
     BIP85_APPLICATIONS[BIP85_APPLICATIONS["HEX"] = 128169] = "HEX";
-})(BIP85_APPLICATIONS = exports.BIP85_APPLICATIONS || (exports.BIP85_APPLICATIONS = {}));
+})(BIP85_APPLICATIONS || (exports.BIP85_APPLICATIONS = BIP85_APPLICATIONS = {}));
 /**
  * Derive BIP-39 child entropy from a BIP-32 root key
  */
@@ -27,7 +29,7 @@ class BIP85 {
         this.node = node;
     }
     deriveBIP39(language, words, index = 0) {
-        if (!util_1.isValidIndex(index)) {
+        if (!(0, util_1.isValidIndex)(index)) {
             throw new Error('BIP39 invalid index');
         }
         if (typeof language !== 'number') {
@@ -52,21 +54,21 @@ class BIP85 {
         return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.BIP39);
     }
     deriveWIF(index = 0) {
-        if (!util_1.isValidIndex(index)) {
+        if (!(0, util_1.isValidIndex)(index)) {
             throw new Error('WIF invalid index');
         }
         const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.WIF}'/${index}'`, 32);
         return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.WIF);
     }
     deriveXPRV(index = 0) {
-        if (!util_1.isValidIndex(index)) {
+        if (!(0, util_1.isValidIndex)(index)) {
             throw new Error('XPRV invalid index');
         }
         const entropy = this.derive(`m/${BIP85_DERIVATION_PATH}'/${BIP85_APPLICATIONS.XPRV}'/${index}'`, 64);
         return new BIP85Child_1.BIP85Child(entropy, BIP85_APPLICATIONS.XPRV);
     }
     deriveHex(numBytes, index = 0) {
-        if (!util_1.isValidIndex(index)) {
+        if (!(0, util_1.isValidIndex)(index)) {
             throw new Error('HEX invalid index');
         }
         if (typeof numBytes !== 'number') {
@@ -81,34 +83,36 @@ class BIP85 {
     derive(path, bytesLength = 64) {
         const childNode = this.node.derivePath(path);
         const childPrivateKey = childNode.privateKey; // Child derived from root key always has private key
-        const hash = crypto_1.hmacSHA512(Buffer.from(BIP85_KEY), childPrivateKey);
+        const hash = (0, crypto_1.hmacSHA512)(new TextEncoder().encode(BIP85_KEY), childPrivateKey);
         const truncatedHash = hash.slice(0, bytesLength);
-        const childEntropy = truncatedHash.toString('hex');
+        const childEntropy = (0, uint8array_tools_1.toHex)(truncatedHash);
         return childEntropy;
     }
     static fromBase58(bip32seed) {
-        const node = bip32_1.fromBase58(bip32seed);
+        const bip32 = (0, bip32_1.default)(ecc);
+        const node = bip32.fromBase58(bip32seed);
         if (node.depth !== 0) {
             throw new Error('Expected master, got child');
         }
         return new BIP85(node);
     }
     static fromSeed(bip32seed) {
-        const node = bip32_1.fromSeed(bip32seed);
+        const bip32 = (0, bip32_1.default)(ecc);
+        const node = bip32.fromSeed(bip32seed);
         if (node.depth !== 0) {
             throw new Error('Expected master, got child');
         }
         return new BIP85(node);
     }
     static fromEntropy(entropy, password = '') {
-        const mnemonic = bip39_1.entropyToMnemonic(entropy);
+        const mnemonic = (0, bip39_1.entropyToMnemonic)(entropy);
         return BIP85.fromMnemonic(mnemonic, password);
     }
     static fromMnemonic(mnemonic, password = '') {
-        if (!bip39_1.validateMnemonic(mnemonic)) {
+        if (!(0, bip39_1.validateMnemonic)(mnemonic)) {
             throw new Error('Invalid mnemonic');
         }
-        const seed = bip39_1.mnemonicToSeedSync(mnemonic, password);
+        const seed = (0, bip39_1.mnemonicToSeedSync)(mnemonic, password);
         return BIP85.fromSeed(seed);
     }
 }

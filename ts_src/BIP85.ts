@@ -1,8 +1,10 @@
-import { BIP32Interface, fromBase58, fromSeed } from 'bip32';
+import BIP32Factory, { BIP32Interface } from 'bip32';
 import { hmacSHA512 } from './crypto';
-import { isValidIndex as checkValidIndex } from './util';
+import { isValidIndex } from './util';
 import { validateMnemonic, entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
 import { BIP85Child } from './BIP85Child';
+import { toHex } from 'uint8array-tools';
+import * as ecc from 'tiny-secp256k1';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki
 
@@ -40,7 +42,7 @@ export class BIP85 {
     words: BIP85_WORD_LENGTHS,
     index: number = 0,
   ): BIP85Child {
-    if (!checkValidIndex(index)) {
+    if (!isValidIndex(index)) {
       throw new Error('BIP39 invalid index');
     }
 
@@ -75,7 +77,7 @@ export class BIP85 {
   }
 
   deriveWIF(index: number = 0): BIP85Child {
-    if (!checkValidIndex(index)) {
+    if (!isValidIndex(index)) {
       throw new Error('WIF invalid index');
     }
 
@@ -88,7 +90,7 @@ export class BIP85 {
   }
 
   deriveXPRV(index: number = 0): BIP85Child {
-    if (!checkValidIndex(index)) {
+    if (!isValidIndex(index)) {
       throw new Error('XPRV invalid index');
     }
 
@@ -101,7 +103,7 @@ export class BIP85 {
   }
 
   deriveHex(numBytes: number, index: number = 0): BIP85Child {
-    if (!checkValidIndex(index)) {
+    if (!isValidIndex(index)) {
       throw new Error('HEX invalid index');
     }
 
@@ -123,18 +125,22 @@ export class BIP85 {
 
   derive(path: string, bytesLength: number = 64): string {
     const childNode: BIP32Interface = this.node.derivePath(path);
-    const childPrivateKey: Buffer = childNode.privateKey!; // Child derived from root key always has private key
+    const childPrivateKey: Uint8Array = childNode.privateKey!; // Child derived from root key always has private key
 
-    const hash: Buffer = hmacSHA512(Buffer.from(BIP85_KEY), childPrivateKey);
-    const truncatedHash: Buffer = hash.slice(0, bytesLength);
+    const hash: Uint8Array = hmacSHA512(
+      new TextEncoder().encode(BIP85_KEY),
+      childPrivateKey,
+    );
+    const truncatedHash: Uint8Array = hash.slice(0, bytesLength);
 
-    const childEntropy: string = truncatedHash.toString('hex');
+    const childEntropy: string = toHex(truncatedHash);
 
     return childEntropy;
   }
 
   static fromBase58(bip32seed: string): BIP85 {
-    const node: BIP32Interface = fromBase58(bip32seed);
+    const bip32 = BIP32Factory(ecc);
+    const node: BIP32Interface = bip32.fromBase58(bip32seed);
     if (node.depth !== 0) {
       throw new Error('Expected master, got child');
     }
@@ -143,7 +149,8 @@ export class BIP85 {
   }
 
   static fromSeed(bip32seed: Buffer): BIP85 {
-    const node: BIP32Interface = fromSeed(bip32seed);
+    const bip32 = BIP32Factory(ecc);
+    const node: BIP32Interface = bip32.fromSeed(bip32seed);
     if (node.depth !== 0) {
       throw new Error('Expected master, got child');
     }
