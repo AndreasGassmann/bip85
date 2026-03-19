@@ -1,8 +1,8 @@
 import BIP32Factory, { BIP32Interface } from 'bip32';
-import { hmacSHA512 } from './crypto';
-import { isValidIndex } from './util';
+import { hmacSHA512 } from './crypto.js';
+import { isValidIndex } from './util.js';
 import { validateMnemonic, entropyToMnemonic, mnemonicToSeedSync } from 'bip39';
-import { BIP85Child } from './BIP85Child';
+import { BIP85Child } from './BIP85Child.js';
 import { toHex } from 'uint8array-tools';
 import * as ecc from 'tiny-secp256k1';
 

@@ -2,6 +2,13 @@
   "name": "bip85",
   "version": "0.0.3",
   "description": "TypeScript/JavaScript implementation of Bitcoin BIP85: Deterministic Entropy From BIP32 Keychains",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
   "main": "src/index.js",
   "types": "./types/index.d.ts",
   "scripts": {
@@ -12,8 +19,8 @@
     "format:ci": "npm run prettier -- --check",
     "gitdiff:ci": "npm run build && git diff --exit-code",
     "lint": "eslint ts_src/",
-    "nobuild:coverage-report": "nyc report --reporter=lcov",
-    "nobuild:coverage": "nyc --check-coverage --lines 80 --branches 80 --functions 80 npm run nobuild:unit",
+    "nobuild:coverage-report": "c8 report --reporter=lcov",
+    "nobuild:coverage": "c8 --check-coverage --lines 80 --branches 80 --functions 80 npm run nobuild:unit",
     "nobuild:unit": "tape test/**/*.spec.js",
     "prettier": "prettier 'ts_src/**/*.ts' 'examples/**/*.ts' 'test/**/*.js' --ignore-path ./.prettierignore",
     "test": "npm run build && npm run format:ci && npm run lint && npm run nobuild:coverage",
@@ -44,20 +51,19 @@
     "@noble/hashes": "2.0.1",
     "bip32": "5.0.1",
     "bip39": "3.1.0",
-    "tiny-secp256k1": "^2.2.4",
-    "uint8array-tools": "^0.0.9",
+    "tiny-secp256k1": "2.2.4",
+    "uint8array-tools": "0.0.9",
     "wif": "5.0.0"
   },
   "devDependencies": {
     "@types/bip32": "^2.0.4",
     "@types/bip39": "^3.0.4",
     "@types/node": "^25.5.0",
-    "@types/tiny-secp256k1": "^2.0.1",
     "@types/wif": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
+    "c8": "^11.0.0",
     "eslint": "^10.0.3",
-    "nyc": "^18.0.0",
     "prettier": "^3.8.1",
     "tape": "^5.9.0",
     "typescript": "^5.9.3"

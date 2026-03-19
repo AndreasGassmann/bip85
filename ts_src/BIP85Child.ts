@@ -1,7 +1,7 @@
 import { encode } from 'wif';
 import BIP32Factory from 'bip32';
 import { entropyToMnemonic } from 'bip39';
-import { BIP85_APPLICATIONS } from './BIP85';
+import { BIP85_APPLICATIONS } from './BIP85.js';
 import { fromHex } from 'uint8array-tools';
 import * as ecc from 'tiny-secp256k1';
 

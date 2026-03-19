@@ -1,5 +1,5 @@
-const BIP85 = require('../..').BIP85;
-const tape = require('tape');
+import tape from 'tape';
+import { BIP85 } from '../../src/index.js';
 
 // Mnemonic: civil purpose bubble rubber carry crazy deposit text switch unhappy blush wrist
 

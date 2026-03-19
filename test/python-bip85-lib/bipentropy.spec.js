@@ -1,13 +1,15 @@
-const BIP85 = require('../../src').BIP85;
-const tape = require('tape');
+import tape from 'tape';
+import { BIP85 } from '../../src/index.js';
 
-// Test vectors taken from python library: https://github.com/ethankosakovsky/bipentropybipentropy/blob/master/test_entropy.py
+// Test vectors taken from python library: https://github.com/ethankosakovsky/bip85/blob/master/bip85/tests/test_bip85.py
 
 // Mnemonic: install scatter logic circle pencil average fall shoe quantum disease suspect usage
 const rootKey =
   'xprv9s21ZrQH143K2LBWUUQRFXhucrQqBpKdRRxNVq2zBqsx8HVqFk2uYo8kmbaLLHRdqtQpUm98uKfu3vca1LqdGhUtyoFnCNkfmXRyPXLjbKb';
+const mnemonic =
+  'install scatter logic circle pencil average fall shoe quantum disease suspect usage';
 
-tape('works for python library test', (t) => {
+tape('works for python library test: mnemonic to entropy', (t) => {
   const master = BIP85.fromBase58(rootKey);
   const childEntropy = master.derive("m/83696968'/0'/0'");
 
@@ -48,5 +50,16 @@ tape('works for python library test: HEX 3', (t) => {
   t.equal(
     child.toEntropy(),
     '61d3c182f7388268463ef327c454a10bc01b3992fa9d2ee1b3891a6b487a5248793e61271066be53660d24e8cb76ff0cfdd0e84e478845d797324c195df9ab8e',
+  );
+});
+
+tape('works for python library test: mnemonic with password', (t) => {
+  const master = BIP85.fromMnemonic(mnemonic, 'TREZOR');
+  const childEntropy = master.derive("m/83696968'/0'/0'");
+
+  t.plan(1);
+  t.equal(
+    childEntropy,
+    'd24cee04c61c4a47751658d078ae9b0cc9550fe43eee643d5c10ac2e3f5edbca757b2bd74d55ff5bcc2b1608d567053660d9c7447ae1eb84b6619282fd391844',
   );
 });

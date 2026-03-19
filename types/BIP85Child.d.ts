@@ -1,4 +1,4 @@
-import { BIP85_APPLICATIONS } from './BIP85';
+import { BIP85_APPLICATIONS } from './BIP85.js';
 export declare class BIP85Child {
     private readonly entropy;
     private readonly type;

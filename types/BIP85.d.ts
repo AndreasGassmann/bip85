@@ -1,5 +1,5 @@
 import { BIP32Interface } from 'bip32';
-import { BIP85Child } from './BIP85Child';
+import { BIP85Child } from './BIP85Child.js';
 export declare enum BIP85_APPLICATIONS {
     BIP39 = 39,
     WIF = 2,

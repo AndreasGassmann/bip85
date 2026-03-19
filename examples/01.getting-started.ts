@@ -1,7 +1,7 @@
 import BIP32Factory from 'bip32';
 import * as ecc from 'tiny-secp256k1';
 import { mnemonicToEntropy, mnemonicToSeedSync } from 'bip39';
-import { BIP85 } from '../ts_src';
+import { BIP85 } from '../ts_src/index.js';
 
 const mnemonic =
   'install scatter logic circle pencil average fall shoe quantum disease suspect usage'; // Mnemonic
