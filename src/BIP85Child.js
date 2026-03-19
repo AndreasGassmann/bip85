@@ -1,17 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BIP85Child = void 0;
-const wif_1 = require("wif");
-const bip32_1 = require("bip32");
-const bip39_1 = require("bip39");
-const BIP85_1 = require("./BIP85");
-class BIP85Child {
+import { encode } from 'wif';
+import BIP32Factory from 'bip32';
+import { entropyToMnemonic } from 'bip39';
+import { BIP85_APPLICATIONS } from './BIP85.js';
+import { fromHex } from 'uint8array-tools';
+import * as ecc from 'tiny-secp256k1';
+export class BIP85Child {
+    entropy;
+    type;
     constructor(entropy, type) {
         this.entropy = entropy;
         this.type = type;
     }
     toEntropy() {
-        if (this.type === BIP85_1.BIP85_APPLICATIONS.XPRV) {
+        if (this.type === BIP85_APPLICATIONS.XPRV) {
             return this.entropy.slice(64, 128);
         }
         else {
@@ -19,25 +20,25 @@ class BIP85Child {
         }
     }
     toMnemonic() {
-        if (this.type !== BIP85_1.BIP85_APPLICATIONS.BIP39) {
+        if (this.type !== BIP85_APPLICATIONS.BIP39) {
             throw new Error('BIP85Child type is not BIP39');
         }
-        return bip39_1.entropyToMnemonic(this.entropy);
+        return entropyToMnemonic(this.entropy);
     }
     toWIF() {
-        if (this.type !== BIP85_1.BIP85_APPLICATIONS.WIF) {
+        if (this.type !== BIP85_APPLICATIONS.WIF) {
             throw new Error('BIP85Child type is not WIF');
         }
-        const buf = Buffer.from(this.entropy, 'hex');
-        return wif_1.encode(128, buf, true);
+        const buf = fromHex(this.entropy);
+        return encode({ version: 128, privateKey: buf, compressed: true });
     }
     toXPRV() {
-        if (this.type !== BIP85_1.BIP85_APPLICATIONS.XPRV) {
+        if (this.type !== BIP85_APPLICATIONS.XPRV) {
             throw new Error('BIP85Child type is not XPRV');
         }
-        const chainCode = Buffer.from(this.entropy.slice(0, 64), 'hex');
-        const privateKey = Buffer.from(this.entropy.slice(64, 128), 'hex');
-        return bip32_1.fromPrivateKey(privateKey, chainCode).toBase58();
+        const chainCode = fromHex(this.entropy.slice(0, 64));
+        const privateKey = fromHex(this.entropy.slice(64, 128));
+        const bip32 = BIP32Factory(ecc);
+        return bip32.fromPrivateKey(privateKey, chainCode).toBase58();
     }
 }
-exports.BIP85Child = BIP85Child;

@@ -1,5 +1,5 @@
-const BIP85 = require('../../src').BIP85;
-const tape = require('tape');
+import tape from 'tape';
+import { BIP85 } from '../../src/index.js';
 
 // Mnemonic: civil purpose bubble rubber carry crazy deposit text switch unhappy blush wrist
 
@@ -10,41 +10,13 @@ tape('does not work for BIP39 with invalid word lengths', (t) => {
   const master = BIP85.fromBase58(rootKey);
 
   const tests = [
-    -1,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
+    -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
     // 12,
-    13,
-    14,
-    15,
-    16,
-    17,
+    13, 14, 15, 16, 17,
     // 18,
-    19,
-    20,
-    21,
-    22,
-    23,
+    19, 20, 21, 22, 23,
     // 24,
-    25,
-    26,
-    27,
-    28,
-    29,
-    30,
-    21,
-    32,
-    48,
+    25, 26, 27, 28, 29, 30, 21, 32, 48,
   ];
 
   t.plan(tests.length);
@@ -77,10 +49,7 @@ tape('does not work for BIP39 with invalid languages', (t) => {
     // 6,
     // 7,
     // 8,
-    9,
-    10,
-    11,
-    12,
+    9, 10, 11, 12,
   ];
 
   t.plan(tests.length);

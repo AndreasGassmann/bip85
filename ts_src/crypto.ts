@@ -1,6 +1,6 @@
-import * as createHmac from 'create-hmac';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha512 } from '@noble/hashes/sha2.js';
 
-// Copied from https://github.com/bitcoinjs/bip32/blob/master/ts-src/crypto.ts because it is not exported
-export function hmacSHA512(key: Buffer, data: Buffer): Buffer {
-  return createHmac('sha512', key).update(data).digest();
+export function hmacSHA512(key: Uint8Array, data: Uint8Array): Uint8Array {
+  return hmac(sha512, key, data);
 }

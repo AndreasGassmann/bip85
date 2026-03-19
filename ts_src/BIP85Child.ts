@@ -1,7 +1,9 @@
 import { encode } from 'wif';
-import { fromPrivateKey } from 'bip32';
+import BIP32Factory from 'bip32';
 import { entropyToMnemonic } from 'bip39';
-import { BIP85_APPLICATIONS } from './BIP85';
+import { BIP85_APPLICATIONS } from './BIP85.js';
+import { fromHex } from 'uint8array-tools';
+import * as ecc from 'tiny-secp256k1';
 
 export class BIP85Child {
   constructor(
@@ -30,9 +32,9 @@ export class BIP85Child {
       throw new Error('BIP85Child type is not WIF');
     }
 
-    const buf = Buffer.from(this.entropy, 'hex');
+    const buf = fromHex(this.entropy);
 
-    return encode(128, buf, true);
+    return encode({ version: 128, privateKey: buf, compressed: true });
   }
 
   toXPRV(): string {
@@ -40,9 +42,11 @@ export class BIP85Child {
       throw new Error('BIP85Child type is not XPRV');
     }
 
-    const chainCode = Buffer.from(this.entropy.slice(0, 64), 'hex');
-    const privateKey = Buffer.from(this.entropy.slice(64, 128), 'hex');
+    const chainCode = fromHex(this.entropy.slice(0, 64));
+    const privateKey = fromHex(this.entropy.slice(64, 128));
 
-    return fromPrivateKey(privateKey, chainCode).toBase58();
+    const bip32 = BIP32Factory(ecc);
+
+    return bip32.fromPrivateKey(privateKey, chainCode).toBase58();
   }
 }

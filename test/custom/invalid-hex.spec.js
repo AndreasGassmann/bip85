@@ -1,5 +1,5 @@
-const BIP85 = require('../..').BIP85;
-const tape = require('tape');
+import tape from 'tape';
+import { BIP85 } from '../../src/index.js';
 
 // Mnemonic: civil purpose bubble rubber carry crazy deposit text switch unhappy blush wrist
 
@@ -35,30 +35,9 @@ tape('does not work for invalid HEX byte length', (t) => {
   const master = BIP85.fromBase58(rootKey);
 
   const tests = [
-    -1,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
+    -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
     // 16..64
-    65,
-    66,
-    67,
-    68,
-    69,
-    70,
+    65, 66, 67, 68, 69, 70,
   ];
 
   t.plan(tests.length);

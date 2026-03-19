@@ -1,5 +1,5 @@
-const BIP85 = require('../../src').BIP85;
-const tape = require('tape');
+import tape from 'tape';
+import { BIP85 } from '../../src/index.js';
 
 // Test vectors taken from: https://github.com/bitcoin/bips/blob/master/bip-0085.mediawiki#applications
 
